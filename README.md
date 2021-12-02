@@ -16,7 +16,6 @@ The repository is structured as follows in its current state:
 6      ¦--best_seasonality_estimates_schema.json    ## Final seasonality estimates metadata
 7      °--best_seasonality_estimates.csv            ## Final seasonality estimates
 ```
-*Note:* CSV files are stored using GIT LFS, which needs to be installed to pull the data (see https://git-lfs.github.com/ for details).
 
 ## Upcoming
 
