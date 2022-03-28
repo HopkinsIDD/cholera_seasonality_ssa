@@ -17,7 +17,7 @@ This file specifies metadata for all generated outputs found in `./generated_dat
       "name": ["gid"],
       "type": ["string"],
       "format": ["default"],
-      "title": ["GADM id"],
+      "title": ["GADM v3.6 id"],
       "description": ["Unique id in the GADM dataset"]
     },
     {
