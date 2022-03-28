@@ -11,7 +11,7 @@
             "name": "gid",
             "type": "string",
             "format": "default",
-            "title": "GADM id",
+            "title": "GADM v3.6 id",
             "description": "Unique id in the GADM dataset"
         },
         {
