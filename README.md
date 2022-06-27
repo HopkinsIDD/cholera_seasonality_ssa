@@ -2,7 +2,9 @@
 
 This is a repository containing minimal datasets, code, and results for the manuscript:
 
+
 Perez-Saez, J., Lessler, J., Lee, E.C., Luquero, F.J., Malembaka, E.B., Finger, F., Langa, J.P., Yennan, S., Zaitchik, B. and Azman, A.S., 2022. *The seasonality of cholera in sub-Saharan Africa: a statistical modelling study*, The Lancet Global Health. https://doi.org/10.1016/S2214-109X(22)00007-9.
+
 
 ### Content
 The repository is structured as follows in its current state in the main branch:
