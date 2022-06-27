@@ -1,5 +1,5 @@
 # Metadata 
-This file specifies metadata for all generated outputs found in `./generated_data`. Metadata follows the Frictionless Standards template in https://specs.frictionlessdata.io/table-schema/ 
+This file specifies metadata for generated outputs found in `./generated_data`. Metadata follows the Frictionless Standards template in https://specs.frictionlessdata.io/table-schema/ 
 
 ## generated_data/best_seasonality_estimates_schema.json
 
@@ -72,4 +72,77 @@ This file specifies metadata for all generated outputs found in `./generated_dat
   ],
   "missingValues": ["NA"]
 } 
+``` 
+
+## generated_data/run_data/all_run_data_schema.json
+
+```json 
+{
+    "fields": [
+        {
+            "name": "country",
+            "type": "string",
+            "format": "default",
+            "title": "Country ISOcode",
+            "description": "Country ISO 3 code"
+        },
+        {
+            "name": "identifier",
+            "type": "string",
+            "format": "default",
+            "title": "Cholera presence identifier",
+            "description": "Threshold used to define cholera persence/absence"
+        },
+        {
+            "name": "gid",
+            "type": "string",
+            "format": "default",
+            "title": "GADM v3.6 id",
+            "description": "Unique id in the GADM dataset"
+        },
+        {
+            "name": "gadm_lev",
+            "type": "integer",
+            "format": "default",
+            "title": "GADM level",
+            "description": "Administrive level"
+        },
+        {
+            "name": "year",
+            "type": "integer",
+            "format": "default",
+            "title": "Year",
+            "description": "Year of the data"
+        },
+        {
+            "name": "month_left",
+            "type": "date",
+            "format": "default",
+            "title": "Month left",
+            "description": "Month of the start of the observations"
+        },
+        {
+            "name": "month_right",
+            "type": "date",
+            "format": "default",
+            "title": "Month right",
+            "description": "Month of the end of the observations"
+        },
+        {
+            "name": "n_obs",
+            "type": "integer",
+            "format": "default",
+            "title": "Number of observations",
+            "description": "Number of distintct observations covering the given gid and time span."
+        },
+         {
+            "name": "cholera",
+            "type": "integer",
+            "format": "default",
+            "title": "Number of observations of cholera presence",
+            "description": "Number of obserations for which incidence data meets the threshold for cholera presence"
+        },
+    ],
+    "missingValues": "NA"
+}
 ``` 

@@ -1,0 +1,69 @@
+{
+    "fields": [
+        {
+            "name": "country",
+            "type": "string",
+            "format": "default",
+            "title": "Country ISOcode",
+            "description": "Country ISO 3 code"
+        },
+        {
+            "name": "identifier",
+            "type": "string",
+            "format": "default",
+            "title": "Cholera presence identifier",
+            "description": "Threshold used to define cholera persence/absence"
+        },
+        {
+            "name": "gid",
+            "type": "string",
+            "format": "default",
+            "title": "GADM v3.6 id",
+            "description": "Unique id in the GADM dataset"
+        },
+        {
+            "name": "gadm_lev",
+            "type": "integer",
+            "format": "default",
+            "title": "GADM level",
+            "description": "Administrive level"
+        },
+        {
+            "name": "year",
+            "type": "integer",
+            "format": "default",
+            "title": "Year",
+            "description": "Year of the data"
+        },
+        {
+            "name": "month_left",
+            "type": "date",
+            "format": "default",
+            "title": "Month left",
+            "description": "Month of the start of the observations"
+        },
+        {
+            "name": "month_right",
+            "type": "date",
+            "format": "default",
+            "title": "Month right",
+            "description": "Month of the end of the observations"
+        },
+        {
+            "name": "n_obs",
+            "type": "integer",
+            "format": "default",
+            "title": "Number of observations",
+            "description": "Number of distintct observations covering the given gid and time span."
+        },
+         {
+            "name": "cholera",
+            "type": "integer",
+            "format": "default",
+            "title": "Number of observations of cholera presence",
+            "description": "Number of obserations for which incidence data meets the threshold for cholera presence"
+        },
+    ],
+    "missingValues": "NA"
+}
+

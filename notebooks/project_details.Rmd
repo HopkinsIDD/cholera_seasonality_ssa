@@ -1,0 +1,52 @@
+---
+title: "Project details"
+author: "Javier Perez Saez"
+date: '`r lubridate::today()`'
+output:
+  bookdown::html_document2:
+    toc: yes
+    toc_float: no
+    number_sections: yes
+---
+
+The aim of this report is to give details on the implementation of the analysis. 
+
+**--- TO BE COMPLETED ---**
+
+```{r setup,  include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  fig.align = "center",
+  message = FALSE,
+  warning = FALSE,
+  cache.lazy = F,
+  bitmapType = "cairo"
+)
+Sys.setlocale("LC_ALL", "C")
+```
+
+```{r preamble}
+library(tidyverse)
+library(magrittr)
+library(kableExtra)
+library(cowplot)
+library(ggthemes)
+library(bayesplot)
+library(posterior)
+library(cmdstanr)
+library(here)
+
+source(here("analysis/modeling_utils.R"))
+source(here("analysis/utils.R"))
+
+```
+
+# Context
+
+# Data
+
+# Modeling
+
+# Clustering
+
+# Post-processing

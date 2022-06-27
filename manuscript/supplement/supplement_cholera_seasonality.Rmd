@@ -1,0 +1,501 @@
+---
+title: "Supplementary material - The seasonality of cholera in sub-Saharan Africa: a statistical modelling study"
+subtitle: "Javier Perez-Saez, Justin Lessler, Elizabeth C. Lee, Francisco J. Luquero, Espoir Bwenge Malembaka, Flavio Finger, Jose Paulo Langa, Sebastian Yennan, Benjamin Zaitchik, Andrew S. Azman"
+journal: ""
+layout: "3p"
+date: ""
+header-includes:
+    \usepackage[OT1]{fontenc}
+    \usepackage{amsthm,amsmath,amsfonts}
+    \usepackage{graphicx}
+    \usepackage{float}
+    \usepackage{array}
+    \usepackage{multirow}
+    \renewcommand{\thepage}{S\arabic{page}}
+    \renewcommand{\thesection}{S\arabic{section}}
+    \renewcommand{\thetable}{S\arabic{table}}
+    \renewcommand{\thefigure}{S\arabic{figure}}
+    \fontsize{10}{20}\selectfont
+output:
+    bookdown::pdf_document2:
+        fig_caption: yes
+        toc: true
+        citation_package: biblatex
+        keep_tex: true
+        extra_dependencies: ["float"]
+bibliography: "refs.bib"
+biblio-style: "authoryear"
+params:
+  identifier: "mean_annual_incidence"
+  redo: FALSE
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      warning = FALSE, 
+                      message = FALSE,
+                      fig.pos = 'h!')
+knitr::opts_chunk$set(fig.pos = "H", out.extra = "")
+# Set locale
+Sys.setlocale("LC_ALL", "C")
+```
+
+```{r preamble}
+library(tidyverse)
+library(magrittr)
+library(cowplot)
+library(kableExtra)
+library(here)
+library(knitr)
+library(foreach)
+library(here)
+
+source(here("analysis/utils.R"))
+source(here("analysis/postprocessing_utils.R"))
+source(here("analysis/modeling_utils.R"))
+setwd(here())
+Sys.setenv("GEOPKG"="TRUE")
+```
+
+# Cholera data and processing
+
+Cholera incidence data consisted of reports from various sources
+(ministries of health, WHO, Médecins Sans Frontières, ProMED, ReliefWeb,
+scientific literature and publicly available epidemiologic reports) with
+different spatial and temporal resolutions. We define as a
+location-period (LP) a set of spatial polygons corresponding to the
+areas where cholera was reported, and a temporal period covered by the
+incidence report (for instance a given first level administrative unit
+during a specific epidemiological week). LPs of cholera reports
+contained in the database were aggregated in space and time to obtain
+the analysis datasets (first and second administrative levels at the
+monthly temporal resolution) on which models were run.
+
+## Spatial matching and aggregation to GADM Units
+
+Our spatial reference for analysis is the GADM Global Administrative
+Areas dataset [@hijmans2010]. We first match LPs to GADM units at the
+country, first and second administrative levels. An LP was defined to
+match a GADM unit if: 1) the centroids of the two were mutually
+contained withing each other, 2) the LP's area within 90% and 110% the
+size of the GADM unit's area. For the set of LPs that were within a
+given GADM units but for which the area was smaller than the 90%
+threshold we compared the union of their areas to that of the GADM unit
+within each data source, and flagged whether the union of areas was
+below, within, or above the 90-110% range used for determining matching.
+This flag was then used in temporal aggregation.
+
+## Temporal aggregation
+
+Analysis were run at the monthly time scale, we thus aggregated all
+sub-monthly observations in each LP to the monthly resolution. These
+monthly aggregates were then used to define cholera excess occurrence by
+comparing monthly incidence to the mean monthly incidence estimates
+extracted from @lessler2018. Observations of length longer than 1 month
+were not modified and were compared to the mean incidence with the
+corresponding exposure period. In cases where the union of areas of
+matching LPs flagged during spatial aggregation we applied the following
+rule: 1) if the union of areas was below the 90% threshold we set
+cholera occurrence to 1 if the monthly incidence was larger than the
+mean monthly incidence, and dropped the observation if it was smaller;
+2) if the union of areas was larger than the 110% threshold we set
+cholera occurrence to 0 if the monthly incidence was below the mean
+monthly estimate, and dropped the observation if it was larger.
+
+## Selection of GADM level for analysis
+
+We selected the analysis GADM level for each country based on data
+availability. In each country, we computed the yearly fraction of
+observed administrative 2 level units for observations of length 1 to 3
+months. We select the second administrative level if the mean fraction
+across years was larger than 10% and the maximum larger than 40%. If
+these conditions were not met we selected the first administrative
+level.
+
+```{r datamaps}
+#| out.height="70%", 
+#| fig.cap="Map of cholera incidence data availability in sub-Saharan Africa. Availability is expressed in terms of the number of distinct years for which at least one observation is available, partitioned by GADM administrative level and obervevation length. Light gray indicate countries that were excluded due to lack of data.", 
+#| fig.align="center"
+
+data_map_file <- here(str_glue("figures/pub_figures/data_maps__all_rl_{params$identifier}_all-all.png"))
+
+include_graphics(data_map_file)
+```
+
+# Seasonality model description
+
+## Base model
+
+Cholera occurrence is modeled as binary observation process at a monthly
+temporal resolution. The analysis is done on a per-country basis taking
+the administrative subdivisions as the spatial units of the disease
+process. The aim is to draw on information on all administrative levels
+by exploiting the nested structure of the administrative units, for
+instance districts within provinces within a country.
+
+The data consists of observations of cholera occurrence per month.
+Assuming that the administrative level 2 is the lowest administrative
+level at which cholera is observed, the set of
+$n_{i,m,y}$ monthly observations for month $m$ in administrative level 2
+unit $i$ of year $y$, $Y_{i,m,y}$, is modeled as resulting from a binomial distribution:
+
+$$
+Y_{i,m,y} \sim \text{Binomial}(n_{i,m,y}, p_{i,m,y}),
+$$ where $p_{i,m,y}$ is the combined probability of there being cholera
+and observing it (the process and measurement models are combined). The
+monthly probabilities are assumed to follow the BYM model: $$
+\text{logit}(p_{i,m,y}) = \beta_{m} + \eta_y + \theta_i + \phi_i,
+$$ where $\beta_m$ is the monthly country-level cholera probability of
+month $m$, $\eta_y$ is a year-specific random effect, and $\theta_i$ and
+$\phi_i$ are the non-spatial and spatial random effects. We assume that
+the $\beta$s follow a 1-dimensional cyclic random walk, i.e.
+$\beta_{m} - \beta_{m-1} \sim \mathcal{N}(0, \sigma_{\beta}) \; \forall m \in [2,12]$
+and $\beta_{1} - \beta_{12} \sim \mathcal{N}(0, \sigma_\beta)$ to
+impose the cyclic pattern. To allow the identifiability of the model we
+further impose $\sum_{m=1}^{12} \beta_m = 0$. We assume that the spatial
+random effects follow the ICAR model, and use the reparameterized
+version of the BYM model [@riebler2016]:
+
+$$
+\theta_i + \phi_i = \epsilon_i = \frac{1}{\sqrt{\tau}} \left( \sqrt{1-\rho} \theta^*_i + \sqrt{\frac{\rho}{s}} \phi_i \right),
+$$ where $\tau$ is the overall marginal precision (i.e. the total
+residual relative risk), $\theta^* \sim \mathcal{N}(0,1)$,
+$\phi \sim ICAR$, $s$ is a scaling factor that depends on the adjacency
+matrix of the neighborhood network to ensure $Var(\phi^*)\approx 1$, and
+$\rho \in [0,1]$ indicates whether the marginal variance comes from
+spatial or non-spatial random effects.
+
+At the upper administrative level the observation process at the admin
+unit level 1 $j$ is given by the probabilities of cholera reporting in
+all areas at the level 2 contained in it, $i \sim j$, as:
+
+$$
+\begin{aligned}
+Y_{j,m,y} &\sim \text{Binomial}(n_{j,m,y}, p_{j,m,y}) \\
+p_{j,m,y} &= 1 - \prod_{i\sim j} 1 -  p^\prime_{i,m,y} \\
+logit(p^\prime_{i,m,y} ) &= logit(p_{i,m,y}) + \xi_l,
+\end{aligned}
+$$ where $p^\prime_{i,m,y}$ is the probability of cholera reported at
+the lower administrative level modified by a reporting modifier $\xi_l$
+at administrative level $l$. For instance, in the case models were run
+at administrative level 2, a different effect modifier was applied to
+the first administrative level and country-wide observations. The
+country-level monthly observations follow the same observation process
+with the product over all spatial subunits.
+
+We also account for multi-month observations. The probability of
+observing cholera in admin unit $i$ in year $y$ for period
+$T_{n} = \{m_1, \dots, m_n\}$ composed of $n$ months is given by:
+
+$$
+p_{i,T_n,y} = 1 - \prod_{m = m_1}^{m_n} 1 -  p_{i,m,y}.
+$$ Similarly multi-month observations at any upper admin level $j$ is
+obtained by multiplying the individual probabilities:
+
+$$
+p_{j,T_n,y} = 1 - \prod_{i \sim j} \prod_{m = m_1}^{m_n} 1 -  p^\prime_{i,m,y}.
+$$
+
+## Offset model
+
+The base model considers yearly random effects based on the calendar
+year, which may be unrealistic in some situations. For instance if
+cholera has a single peak in December/January, calendar-based random
+effects will apply only to the first "half" of the epidemic
+with the second half falling in the following calendar year.
+
+To account for this fact we introduce and offset in the assignment of
+the yearly random effect based on the month in order to align the yearly
+random effects to "cholera" years by introducing a latent discrete
+variable representing the offset. The probability of occurrence becomes:
+
+$$
+logit(p_{i,j,m}) = \beta_m + \eta_{f(yr, m, z)} + \epsilon_i,
+$$ where $f(yr,m,z)$ gives the year corresponding to the month
+accounting for the offset. $$
+f(yr,m,z) = \left\{
+\begin{array}{ll}
+yr & \text{if} \quad m + z \leq 12\\
+yr+1 & \text{if} \quad m + z > 12
+\end{array}
+\right. \;, \quad  z \in [0,11].
+$$ For the purpose of sampling $z$ can be marginalized out of the
+likelihood as:
+
+$$
+\begin{aligned}
+p(Y | \Theta) & = \sum_{z = 0}^{11} p(Y|\Theta, z) p(z), \\
+& = \sum_{z = 0}^{12} \text{Uniform}(z| 0, 11) \prod_{j=1}^{n_{obs}} \text{Binomial}(Y_j| n_j, p_{j, z})
+\end{aligned}
+$$ where $\Theta$ is the vector of all parameters defining the
+occurrence probabilities ($\beta, \eta, \rho, \tau, \phi, \theta, \xi$), and
+subscript $j$ indicates the observation (combination of admin level,
+month and year).
+
+And the log-likelihood as:
+
+$$
+\log(p(Y | \Theta)) = \log \left\{ \sum_{z = 0}^{11} \exp(ll_z) \right\}, 
+$$ where $ll_z$ are the individual sum of marginal log-likelihoods and
+the log of the prior on $z$: $$
+ll_z = \log(p(Y|\Theta, z)p(z)) = \log(\text{Uniform}(z| 0, 12)) +\sum_{j=1}^{n_{obs}} \log(\text{Binomial}(Y_j|n_j, p_{j, z})).
+$$
+
+## Mixture model
+
+Assuming the possible coexistence of two distinct groups of
+seasonalities within the same country, a latent class model for the
+probabilities of observing cholera can be written in terms of a mixture
+of two different vectors of seasonality coefficients $\beta^{g_1, g_1}$:
+
+$$
+logit(p_{i,j,m}) = \lambda_i \beta^{g_1}_m + (1-\lambda_i) \beta^{g_2}_m  + \eta_{f(yr, m, z)} + \epsilon_i,
+$$ with $\lambda_i \in (0, 1)$ representing the mixture probabilities,
+with priors $\lambda \sim beta(0.5, 0.5)$. To mitigate label switching
+issues we impose the constraints $\beta^{g_2}_1 > \beta^{g_1}_1$ and
+$\beta^{g_2}_8 < \beta^{g_1}_8$. We allow for spatial autocorrelation in
+mixture coefficients by implementing an approach similar to that used
+for spatial random effects above:
+
+$$
+\begin{aligned}
+logit(\lambda_i) &= \theta_{\lambda_i} + \phi_{\lambda_i}, \\
+\theta_{\lambda_i} + \phi_{\lambda_i} &= \frac{1}{\sqrt{\tau_\lambda}} \left( \sqrt{1-\rho_\lambda} \theta^*_{\lambda_i} + \sqrt{\frac{\rho_\lambda}{s}} \phi_{\lambda_i} \right),
+\end{aligned}
+$$ with parameter definitions as for the spatial random effects.
+
+## Priors
+
+We use the following priors: 
+$$
+\begin{aligned}
+\xi_l &\sim \mathcal{N}(0, 1),\\
+\tau_{\beta} &\sim \mathcal{N}(0, 2.5), \\
+\eta_t &\sim \mathcal{N}(0, \sigma_{\eta}), \\
+\sigma_{\eta} &\sim \mathcal{N}(0, 2.5),
+\end{aligned}
+$$ 
+where $\tau_\beta = 1/\sigma_\beta^2$ is the precision of the cyclic random walk of seasonality coefficients.
+Priors for the spatial random effects were described above.
+Penalized-complexity (PC) priors are chosen for on $\tau$ and $\phi$
+following [@riebler2016]:
+$\pi(\tau) = \frac{\theta}{2} \tau^{-3/2} \exp \left(-\theta \tau^{-1/2} \right),$
+with $\theta = -\log(\alpha_\tau)/U_\tau$ where
+$P\left(\frac{1}{\sqrt{\tau}} > U_\tau\right) = \alpha_\tau$ with
+$\alpha_\tau,U_\tau$ set to represent our belief in the importance of
+marginal variance. Similarly a PC prior for $\rho$ can be formulated in
+terms of the probability $P(\rho < U_\rho) = \alpha_\rho$, which does
+not have a closed-form expression but for which tabulated values can be
+computed. We set $U_\tau = 1$ and $\alpha_\tau = 0.75$, and
+$U_\rho = .5$ and $\alpha_\rho = 2/3$ following @riebler2016. The same
+priors were chosen for spatially autocorrelated mixture probabilities
+for the mixture models.
+
+# Model comparison
+
+\renewcommand{\arraystretch}{.8}
+
+```{r model}
+
+all_loo <- readRDS(here("generated_data/postprocessing/all_all_mean_annual_incidence_runlevbest_auto_model_IC.rds"))
+
+country_dict <- read_csv(here("data/all_country_geonaming.csv"),
+                         col_types = cols()) %>% 
+  select(name, alpha_3) %>% 
+  {
+    vec <- .$name
+    names(vec) <- .$alpha_3
+    vec
+  }
+
+country_dict["COD"] <- "Democratic Republic of the Congo"
+country_dict["TCD"] <- "Tchad"
+country_dict["TZA"] <- "Tanzania"
+
+# Make table
+all_loo_for_table <- all_loo %>% 
+  select(country, variant, elpd_diff, se_diff, looic) %>% 
+  group_by(country) %>% 
+  mutate(rank = rank(-elpd_diff),
+         deltaloo = looic - min(looic),
+         weight = exp(-.5 * deltaloo)/sum(exp(-.5 * deltaloo))) %>% 
+  ungroup() %>% 
+  mutate(country = country_dict[country]) %>% 
+  arrange(country, rank)
+
+all_loo_for_table %>% 
+  select(-country, -deltaloo) %>%
+  mutate(weight = formatC(weight, digits = 2, format = "f")) %>% 
+  mutate_if(is.numeric, formatC, digits = 1, format = "f") %>% 
+  mutate(rank = as.integer(rank)) %>% 
+  mutate_if(is.numeric, as.character) %>% 
+  mutate(elpd_diff = ifelse(elpd_diff == "0.0", "-", elpd_diff),
+         se_diff = ifelse(se_diff == "0.0", "-", se_diff)) %>% 
+  kableExtra::kable(
+    col.names = c("model", "ELPD diff", "SE", "LOO-IC", "rank", "weight"),
+    format = "latex",
+    booktabs = TRUE, longtable = TRUE,
+    linesep = "", 
+    caption = "Model fit results and model selection. ELPD diff: difference in estimated log predictive density with respect to best-fitting model. SE: standard error of the ELPD difference. LOO-IC: Leave-one-out cross-validation estimate Information Criterion. Rank: model rank. Weight: Evidence weight in favor of the model.",
+    
+  ) %>%
+  kable_classic(full_width = F, 
+                position = "left",
+                font_size = 7) %>% 
+  kable_styling(latex_options = c("hold_position", "repeat_header"),
+                repeat_header_continued = "\\textit{(Continued on Next Page...)}",
+                repeat_header_method = "replace") %>% 
+  pack_rows(index = table(all_loo_for_table$country)) %>% 
+  row_spec(0, bold = T)
+
+```
+
+# Posterior checks
+
+## Posterior variance shrinkage
+
+```{r psh}
+#| out.width="90%",
+#| fig.cap="Impact of priors. For each country the impact of priors on seasonality-related parameters was evaluated in terms of the shrinkage of variance from the prior to the posterior, computed as 1 - var(posterior)/var(prior).",
+#| fig.align="center"
+
+psh_file <- here(str_glue("figures/pub_figures/prior_shrinkage_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(psh_file)
+```
+
+## Posterior retrodictive checks
+
+```{r ppc}
+#| out.height="75%",
+#| fig.cap="Model evaluation. For each country the performance of the selected model is given as the fraction of observations covered by posterior retrodictions as a function of the credible interval width. The coverage fraction is given for all observations as well as partitioned by administrative level.",
+#| fig.align="center"
+ppc_file <- here(str_glue("figures/pub_figures/ppc_coverage_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(ppc_file)
+```
+
+# Additional results
+
+```{r ts}
+#| out.height="75%", 
+#| fig.cap="Country-level cholera sesaonality time series. Excess cholera seasonality is shown in for the final selection of models in terms of the mean (line) and 95\\% CrI odds ratios.",
+#| fig.align="center"
+
+ts_file <- here(str_glue("figures/pub_figures/seas_coef_ts_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(ts_file)
+```
+
+```{r seasunct}
+#| out.height="75%", 
+#| fig.cap="Uncertainty in seasonality coefficients in terms of the width of the 95 \\% CrI on the logit scale.", 
+#| fig.align="center"
+
+smu_file <- here(str_glue("figures/pub_figures/seas_coef_maps_uncertaintyall_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(smu_file)
+```
+
+```{r seasindunct}
+#| out.height="33%",
+#| fig.cap="Uncertainty in seasonality index in terms of the posterior probability that the index is larger than the null hypothesis of equal occurrence probability during the year. Adminstrative units for which the posterior probability is above 0.9 are outlined in black.",
+#| fig.align="center"
+
+siu_file <- here(str_glue("figures/pub_figures/seas_index_map_uncertainty_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(siu_file)
+```
+
+```{r seasindscat}
+#| out.height="33%", 
+#| fig.cap="Seasonality strength and administrative unit characteristics. Each point corresponds to one administrative unit, lines correspond to GAM estimates of the relationship betwen the characteristics and the seasonality indices.", 
+#| fig.align="center"
+
+sic_file <- here(str_glue("figures/pub_figures/seas_index_scatter_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(sic_file)
+```
+
+```{r peak}
+#| out.height="33%", 
+#| fig.cap="Seasonality peak map. Map of the month with largest estimated excess cholera occurrence odds ratio in countries for which a model with seasonality was selected.", 
+#| fig.align="center"
+
+peak_file <- here(str_glue("figures/pub_figures/peak_month_map_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(peak_file)
+```
+
+```{r offset}
+#| out.height="33%", 
+#| fig.cap="Offset map. Map of the month determining the start of the 'cholera year' in coutries for which a model with offset was selected. Countries with two colors correspond to models with both mixture and offset.", 
+#| fig.align="center"
+
+offset_file <- here(str_glue("figures/pub_figures/offset_map_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(offset_file)
+```
+
+# Seasonality grouping
+
+```{r loogroup}
+#| out.height="20%", 
+#| fig.cap="Model comparison of number of groupings. Model comparison was done in terms of the estimated log-predictive density (elpd). Pairwise differences in elpd were computed for all model combinations, and results are shown in terms of the mean (points) and 2 standard errors (lines). The model with highest elpd was the model with 5 groups.", 
+#| fig.align="center"
+
+loo_file <- here(str_glue("figures/pub_figures/seas_group_model_comp_{params$identifier}.png"))
+
+include_graphics(loo_file)
+```
+
+```{r othergroup}
+#| out.width="100%", 
+#| fig.cap="Clustering results for two to seven clusters.", 
+#| fig.align="center"
+
+group_file <- here(str_glue("figures/pub_figures/seas_group_map_all_k2-3-4-5-6-7_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(group_file)
+```
+
+# Correlation with hydro-climatic variables
+
+```{r corrstat}
+#| out.height="33%", 
+#| fig.cap="Importance of correlations with hydro-climatic variables. Importance is given in terms of the fraction of area, administrative units, and population with the absolute value of Spearman correlation above thresholds between 0.5 and 0.9.", 
+#| fig.align="center"
+
+cst_file <- here(str_glue("figures/pub_figures/corr_stats_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(cst_file)
+```
+
+```{r corr}
+#| out.height="90%",
+#| fig.cap="Correlation between excess cholera seasonality and hydro-climatic variables. Correlation is expressed in terms of Spearman's coefficient, with areas with significant correlations outlined in balck.",
+#| fig.align="center"
+
+group_file <- here(str_glue("figures/pub_figures/covar_corr_all_lags0-1-2-3_spearman_all_rlbest_{params$identifier}_all-all.png"))
+
+include_graphics(group_file)
+```
+
+# Alternative cholera occurrence definitions
+
+```{r cholcomp}
+#| out.height="33%",
+#| fig.cap="Comparison of model selection for alternative definitions of cholera occurrence",
+#| fig.align="center"
+
+cc_file <- here(str_glue("figures/pub_figures/cholera_def_comp_all_rlbest_all_all-all.png"))
+
+include_graphics(cc_file)
+```
+
+\pagebreak
+
+# References

@@ -1,0 +1,24 @@
+name: Default        # Name of the config
+country_iso3: AGO    # Country iso3 code
+variant: "base"      # Model variant in {null, base, offset, mixture, mixture_offset}
+monthly_data: ""     # Path to raw data (this is not available in public repo, see README)
+start_date: null     # Start date for modeling (null indicates no lower bound)
+end_date: null       # End date for modeling (null indicates no upper bound)
+keep: TRUE           # Keep multi-year data
+gadm_levels: "012"   # GADM levels data to use
+run_level: best      # GADM level for modeling ('best' denotes the level 2 unless there is insufficient data, see Supplementary material)
+redo_data: FALSE     # Redo data pre-processing (this is not available on public repo, see README)
+redo_comp: TRUE      # Redo computations
+thresh: mean_annual_incidence    # Threshold for defining cholera presence/absence in {mean_annual_incidence, cases, occurrence} (see Supplementary material)
+case_thresh: 10      # Number of cases when using the 'cases' threshold
+drop_multi_yr: FALSE    # Drop multi-year observations from analysis dataset (see README)
+ind_betas_diff: [1, 8]  # Indices of months in which groups differ in mixture models (see Supplementary material)    
+stan:
+  n_iter: 250       # Number of sampling iterations
+  n_warmup: 250     # Number of warmup iterations
+  n_chains: 4       # Number of chains
+  run_threads: FALSE    # Run multi-threading (see README)
+  control:        
+    adapt_delta: .9     # Variables for cmdstan NUTS samples (see cmdstanr package documentation)
+    metric: "unit_e"   
+    max_treedepth: 12

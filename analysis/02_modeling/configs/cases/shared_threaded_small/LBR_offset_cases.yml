@@ -1,0 +1,26 @@
+name: LBR_offset_cases
+country_iso3: LBR
+variant: offset
+monthly_data: generated_data/monthly_data_20220211.csv
+start_date: ~
+end_date: ~
+keep: yes
+gadm_levels: '012'
+run_level: 1.0
+redo_data: no
+redo_comp: no
+thresh: cases
+case_thresh: 10
+drop_multi_yr: no
+ind_betas_diff:
+- 1
+- 8
+stan:
+  n_iter: 1000
+  n_warmup: 1000
+  n_chains: 4
+  run_threads: yes
+  control:
+    adapt_delta: 0.9
+    metric: unit_e
+    max_treedepth: 16.0
