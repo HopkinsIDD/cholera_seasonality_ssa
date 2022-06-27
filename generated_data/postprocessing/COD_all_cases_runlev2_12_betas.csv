@@ -1,0 +1,13 @@
+mean,q025,q975,Rhat,param,param_fam,country,run_level,variant,identifier,time_left,time_right,source
+0.27274892699325,-0.041384299999999985,0.5711295,0.9998045988285001,betas_g1[1],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+0.3699989294825,0.08450060000000001,0.65593625,1.0001433951290806,betas_g1[2],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+0.05620332503025,-0.2813145,0.37296475,0.9999371141860892,betas_g1[3],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+-0.3238017391625,-0.6985795,0.03203485000000005,0.9999555590710905,betas_g1[4],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+-0.2104822214415,-0.55993425,0.1348315,0.9999455018957477,betas_g1[5],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+-0.3046764657875,-0.65327525,0.029898700000000018,0.9991970950761706,betas_g1[6],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+-0.34282594135,-0.7121587500000001,4.7460100000004695e-4,0.9996513843381867,betas_g1[7],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+0.04304172356275,-0.2694375,0.3493835,1.00002790954774,betas_g1[8],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+0.205090458053,-0.125114,0.5083900000000001,1.0003670256191968,betas_g1[9],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+0.220036689635,-0.11092225,0.5326852500000001,1.0012379983492847,betas_g1[10],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+-0.06549569558175,-0.4345062499999999,0.28238325000000003,0.9998627287260923,betas_g1[11],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds
+0.08038678094875,-0.26405125,0.3982177500000001,0.9992885240687048,betas_g1[12],betas_g1,COD,2,base,cases,all,all,./generated_data/outputs/output_COD_10cases_base_all-all_kTRUE_l12_runlev2_dmyTRUE.rds

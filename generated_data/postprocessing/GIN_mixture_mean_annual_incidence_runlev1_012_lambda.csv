@@ -1,0 +1,9 @@
+mean,q025,q975,Rhat,param,param_fam,country,run_level,variant,identifier,time_left,time_right,source
+0.39815677525,0.19494725000000002,0.60315325,0.9994135894626531,lambdas[1],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds
+0.88406699,0.7289975,0.97886075,1.0018817733119645,lambdas[2],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds
+0.4847532225,0.18385,0.8072904999999999,0.9995893471584847,lambdas[3],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds
+0.5064108055,0.17208849999999998,0.8352970000000001,0.9998002313910724,lambdas[4],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds
+0.42553723575,0.2193355,0.62859225,1.0004600037842952,lambdas[5],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds
+0.48925826075,0.17890525000000002,0.82258025,0.9998189711008756,lambdas[6],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds
+0.48249731325,0.212638,0.7696950000000001,1.0005000212617916,lambdas[7],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds
+0.24605508625,0.07980135,0.4467205000000001,1.000529649470867,lambdas[8],lambdas,GIN,1,mixture,mean_annual_incidence,all,all,./generated_data/outputs/output_GIN_mean_annual_incidence_mixture_all-all_kTRUE_l012_runlev1_dmyFALSE.rds

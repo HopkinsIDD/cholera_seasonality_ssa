@@ -1,0 +1,2 @@
+variable,mean,q2.5,q25,q75,q97.5,gid,month,country,run_level,variant,identifier,time_left,time_right
+NA,NA,NA,NA,NA,NA,NA,NA,LBR,1,null,mean_annual_incidence,all,all

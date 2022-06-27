@@ -1,0 +1,32 @@
+################################################################
+ # Data and outputs statistics for model runs 
+ # Occurrence definition: mean_annual_incidence 
+ # Produced at 2022-03-21 12:49:03 
+################################################################
+
+
+# Data 
+Number of observations: 236'741 
+
+Observations by gadm level: 
+GADM lev 0 : 6'974 observations 
+GADM lev 1 : 18'607 observations 
+GADM lev 2 : 211'160 observations 
+
+Observations span 1970 - 2021 
+
+Of which 97.7 % are after the year 2000 
+
+Units by gadm level: 
+GADM lev 0 : 34 admin units 
+GADM lev 1 : 426 admin units 
+GADM lev 2 : 2'496 admin units 
+There are 221'556 ( 93.6 %) sub-monthly observations 
+There are 9'145 ( 3.86 % of total, 60.2 % of > monthly) yearly observations 
+
+# Models 
+No results are available for 11  countries: BWA COG ERI GAB GMB GNQ LSO MRT RWA STP SWZ 
+There were 24 / 34 countries with seasonality 
+Countries without seasonality: BDI, CAF, DJI, GHA, LBR, MDG, NAM, SEN, TGO, ZWE 
+There were 12 / 34 countries with mixture 
+A total of 85.9 % of the population in SSA lives in countries with seasonality.
