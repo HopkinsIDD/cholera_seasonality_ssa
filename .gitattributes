@@ -1,0 +1,4 @@
+generated_data/geodata.gpkg filter=lfs diff=lfs merge=lfs -text
+generated_data/geodata/gadm36_lev0.geojson filter=lfs diff=lfs merge=lfs -text
+generated_data/geodata/gadm36_lev1.geojson filter=lfs diff=lfs merge=lfs -text
+generated_data/geodata/gadm36_lev2.geojson filter=lfs diff=lfs merge=lfs -text
