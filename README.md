@@ -5,6 +5,7 @@ This is a repository containing minimal datasets, code, and results for the manu
 
 Perez-Saez, J., Lessler, J., Lee, E.C., Luquero, F.J., Malembaka, E.B., Finger, F., Langa, J.P., Yennan, S., Zaitchik, B. and Azman, A.S., 2022. *The seasonality of cholera in sub-Saharan Africa: a statistical modelling study*, The Lancet Global Health. https://doi.org/10.1016/S2214-109X(22)00007-9.
 
+**-- THIS IS THE BRANCH WITH ALL DATA FOR REPLICATION--**
 
 ### Content
 The repository is structured as follows in its current state in the main branch:
@@ -75,9 +76,8 @@ The content of the main branch consists of:
 Details on project implementation are given in the notebook in `notebooks/project_details.html`. This file is currently empty and will be updated soon.
 
 ### Replicate the results
-All data and outputs necessary to replicate the results are available in branch `for_replication`. A separate branch was created because it requires checking out a large number of files. To access the branch run:
+All data and outputs necessary to replicate the results are available in this branch. Some files are large and require git lfs to download (https://git-lfs.github.com/). These can be pulled running:
 
 ```
-git checkout for_replication
+git lfs pull
 ```
-
